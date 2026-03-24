@@ -116,7 +116,35 @@ export const EmergencyNoticeDetailView: React.FC<EmergencyNoticeDetailViewProps>
     );
   }
 
-  const previewNotice = noticeId ? notices.find(n => n.title === decodeURIComponent(noticeId)) : null;
+  const slugify = (text: string, id: string) => {
+    const bengaliToEnglishMap: { [key: string]: string } = {
+      'অ': 'o', 'আ': 'a', 'ই': 'i', 'ঈ': 'i', 'উ': 'u', 'ঊ': 'u', 'ঋ': 'ri', 'এ': 'e', 'ঐ': 'oi', 'ও': 'o', 'ঔ': 'ou',
+      'ক': 'k', 'খ': 'kh', 'গ': 'g', 'ঘ': 'gh', 'ঙ': 'ng',
+      'চ': 'ch', 'ছ': 'chh', 'জ': 'j', 'ঝ': 'jh', 'ঞ': 'n',
+      'ট': 't', 'ঠ': 'th', 'ড': 'd', 'ঢ': 'dh', 'ণ': 'n',
+      'ত': 't', 'থ': 'th', 'দ': 'd', 'ধ': 'dh', 'ন': 'n',
+      'প': 'p', 'ফ': 'f', 'ব': 'b', 'ভ': 'v', 'ম': 'm',
+      'য': 'j', 'র': 'r', 'ল': 'l', 'শ': 'sh', 'ষ': 'sh', 'স': 's', 'হ': 'h', 'ড়': 'r', 'ঢ়': 'rh', 'য়': 'y',
+      'ৎ': 't', 'ং': 'ng', 'ঃ': 'h', 'ঁ': 'n',
+      'া': 'a', 'ি': 'i', 'ী': 'i', 'ু': 'u', 'ূ': 'u', 'ৃ': 'ri', 'ে': 'e', 'ৈ': 'oi', 'ো': 'o', 'ৌ': 'ou', '্': '',
+      '০': '0', '১': '1', '২': '2', '৩': '3', '৪': '4', '৫': '5', '৬': '6', '৭': '7', '৮': '8', '৯': '9'
+    };
+    
+    let transliterated = '';
+    for (let i = 0; i < text.length; i++) {
+      const char = text[i];
+      transliterated += bengaliToEnglishMap[char] || char;
+    }
+    
+    const slug = transliterated.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
+    return slug || id;
+  };
+
+  const previewNotice = noticeId ? notices.find(n => slugify(n.title, n.id) === noticeId || n.id === noticeId) : null;
+
+  const navigateToNotice = (notice: Notice) => {
+    navigate(`/emergency-notice/${slugify(notice.title, notice.id)}.html`);
+  };
 
   const handleTogglePin = async (id: string) => {
     try {
@@ -541,7 +569,7 @@ export const EmergencyNoticeDetailView: React.FC<EmergencyNoticeDetailViewProps>
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.05 }}
-                onClick={() => navigate(`/emergency-notice/${encodeURIComponent(notice.title)}.html`)}
+                onClick={() => navigateToNotice(notice)}
                 className="bg-[#1f6fa7] rounded-[14px] p-4 text-white mb-4 flex gap-2.5 items-start cursor-pointer transition-transform active:scale-[0.98] relative pt-8 border-2 border-[#e63946]"
               >
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-br from-[#6a11cb] to-[#2575fc] text-white px-3 py-1 rounded-lg text-xs font-bold whitespace-nowrap shadow-sm">
@@ -605,7 +633,7 @@ export const EmergencyNoticeDetailView: React.FC<EmergencyNoticeDetailViewProps>
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.05 }}
-                  onClick={() => navigate(`/emergency-notice/${encodeURIComponent(notice.title)}.html`)}
+                  onClick={() => navigateToNotice(notice)}
                   className={`bg-[#1f6fa7] rounded-[14px] p-4 text-white mb-4 flex gap-2.5 items-start cursor-pointer transition-transform active:scale-[0.98] ${
                     isFirst ? 'relative pt-8' : ''
                   }`}

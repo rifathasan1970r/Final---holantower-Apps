@@ -519,7 +519,7 @@ const App: React.FC = () => {
         <Route path="/policy.html" element={<PolicyView onBack={() => setCurrentView('MENU')} />} />
         <Route path="/contact.html" element={<ContactView onBack={() => setCurrentView('MENU')} setView={setCurrentView} />} />
         <Route path="/download-app.html" element={<DownloadAppView onBack={() => setCurrentView('MENU')} />} />
-        <Route path="/emergency-notice.html" element={<EmergencyNoticeDetailView onBack={() => navigate('/emergency-notice.html')} />} />
+        <Route path="/emergency-notice.html" element={<EmergencyNoticeDetailView onBack={() => setCurrentView('HOME')} />} />
         <Route path="/emergency-notice/:noticeId.html" element={<EmergencyNoticeDetailView onBack={() => navigate('/emergency-notice.html')} />} />
         <Route path="/gallery.html" element={<GalleryView onBack={() => setCurrentView('MENU')} setView={setCurrentView} />} />
         <Route path="/gallery-detail.html" element={<GalleryDetailView onBack={() => setCurrentView('GALLERY')} setView={setCurrentView} />} />
