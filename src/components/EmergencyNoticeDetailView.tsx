@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { 
   ChevronLeft, 
   AlertTriangle, 
@@ -48,10 +49,11 @@ const toBengaliNumber = (num: string | number) => {
 };
 
 export const EmergencyNoticeDetailView: React.FC<EmergencyNoticeDetailViewProps> = ({ onBack }) => {
+  const { noticeId } = useParams<{ noticeId: string }>();
+  const navigate = useNavigate();
   const [isAdminMode, setIsAdminMode] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [pinInput, setPinInput] = useState('');
-  const [previewNotice, setPreviewNotice] = useState<Notice | null>(null);
   const [noticeToDelete, setNoticeToDelete] = useState<string | null>(null);
   const [noticeToEdit, setNoticeToEdit] = useState<any | null>(null);
   
@@ -72,20 +74,6 @@ export const EmergencyNoticeDetailView: React.FC<EmergencyNoticeDetailViewProps>
   const [year, setYear] = useState(today.getFullYear().toString());
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-
-  const handleBoldClick = () => {
-    if (!textareaRef.current) return;
-    const start = textareaRef.current.selectionStart;
-    const end = textareaRef.current.selectionEnd;
-    const selectedText = description.substring(start, end);
-    const newText = description.substring(0, start) + `**${selectedText || 'বোল্ড লেখা'}**` + description.substring(end);
-    setDescription(newText);
-    
-    setTimeout(() => {
-      textareaRef.current?.focus();
-      textareaRef.current?.setSelectionRange(start + 2, end + 2 + (selectedText ? 0 : 9));
-    }, 0);
-  };
 
   const fetchNotices = async () => {
     setLoading(true);
@@ -118,6 +106,8 @@ export const EmergencyNoticeDetailView: React.FC<EmergencyNoticeDetailViewProps>
   useEffect(() => {
     fetchNotices();
   }, []);
+
+  const previewNotice = noticeId ? notices.find(n => encodeURIComponent(n.title) === noticeId) : null;
 
   const handleTogglePin = async (id: string) => {
     try {
@@ -253,7 +243,7 @@ export const EmergencyNoticeDetailView: React.FC<EmergencyNoticeDetailViewProps>
         <div className="flex items-center justify-between shrink-0 bg-white dark:bg-slate-800 p-4 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700">
           <div className="flex items-center gap-3">
             <button 
-              onClick={() => setPreviewNotice(null)} 
+              onClick={onBack} 
               className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors shrink-0"
             >
               <ChevronLeft size={24} className="text-slate-600 dark:text-slate-300" />
@@ -542,7 +532,7 @@ export const EmergencyNoticeDetailView: React.FC<EmergencyNoticeDetailViewProps>
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.05 }}
-                onClick={() => setPreviewNotice(notice)}
+                onClick={() => navigate(`/emergency-notice/${encodeURIComponent(notice.title)}.html`)}
                 className="bg-[#1f6fa7] rounded-[14px] p-4 text-white mb-4 flex gap-2.5 items-start cursor-pointer transition-transform active:scale-[0.98] relative pt-8 border-2 border-[#e63946]"
               >
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-br from-[#6a11cb] to-[#2575fc] text-white px-3 py-1 rounded-lg text-xs font-bold whitespace-nowrap shadow-sm">
@@ -606,7 +596,7 @@ export const EmergencyNoticeDetailView: React.FC<EmergencyNoticeDetailViewProps>
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.05 }}
-                  onClick={() => setPreviewNotice(notice)}
+                  onClick={() => navigate(`/emergency-notice/${encodeURIComponent(notice.title)}.html`)}
                   className={`bg-[#1f6fa7] rounded-[14px] p-4 text-white mb-4 flex gap-2.5 items-start cursor-pointer transition-transform active:scale-[0.98] ${
                     isFirst ? 'relative pt-8' : ''
                   }`}
