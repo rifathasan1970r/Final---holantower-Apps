@@ -107,7 +107,16 @@ export const EmergencyNoticeDetailView: React.FC<EmergencyNoticeDetailViewProps>
     fetchNotices();
   }, []);
 
-  const previewNotice = noticeId ? notices.find(n => encodeURIComponent(n.title) === noticeId) : null;
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center py-12 space-y-4">
+        <div className="w-10 h-10 border-4 border-[#1f6fa7] border-t-transparent rounded-full animate-spin"></div>
+        <p className="text-sm font-medium text-slate-500">লোড হচ্ছে...</p>
+      </div>
+    );
+  }
+
+  const previewNotice = noticeId ? notices.find(n => n.title === decodeURIComponent(noticeId)) : null;
 
   const handleTogglePin = async (id: string) => {
     try {
