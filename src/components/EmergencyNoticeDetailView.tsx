@@ -824,10 +824,10 @@ export const EmergencyNoticeDetailView: React.FC<EmergencyNoticeDetailViewProps>
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
-              className="bg-white dark:bg-slate-800 rounded-3xl p-6 w-full max-w-sm shadow-2xl border border-slate-100 dark:border-slate-700 max-h-[90vh] overflow-y-auto"
+              className="bg-white dark:bg-slate-800 rounded-3xl p-6 w-full max-w-sm shadow-2xl border border-slate-100 dark:border-slate-700 flex flex-col max-h-[85vh]"
             >
-              <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-4">নোটিশ এডিট</h3>
-              <div className="space-y-4">
+              <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-4 shrink-0">নোটিশ এডিট</h3>
+              <div className="space-y-4 overflow-y-auto pr-2 shrink">
                 <div>
                   <label className="text-xs font-bold text-slate-500 dark:text-slate-400 mb-1 block">নোটিশের নাম</label>
                   <input
@@ -913,7 +913,7 @@ export const EmergencyNoticeDetailView: React.FC<EmergencyNoticeDetailViewProps>
                   />
                 </div>
               </div>
-              <div className="flex gap-3 mt-6">
+              <div className="flex gap-3 mt-6 shrink-0 pt-2">
                 <button
                   onClick={() => setNoticeToEdit(null)}
                   className="flex-1 py-3 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl font-bold hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors"
