@@ -818,13 +818,13 @@ export const EmergencyNoticeDetailView: React.FC<EmergencyNoticeDetailViewProps>
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+            className="fixed inset-0 z-[70] flex items-start pt-16 justify-center px-4 pb-4 bg-black/50 backdrop-blur-sm"
           >
             <motion.div
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
-              className="bg-white dark:bg-slate-800 rounded-3xl p-6 w-full max-w-sm shadow-2xl border border-slate-100 dark:border-slate-700 flex flex-col max-h-[85vh]"
+              className="bg-white dark:bg-slate-800 rounded-3xl p-6 w-full max-w-sm shadow-2xl border border-slate-100 dark:border-slate-700 flex flex-col max-h-[70vh]"
             >
               <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-4 shrink-0">নোটিশ এডিট</h3>
               <div className="space-y-4 overflow-y-auto pr-2 shrink">
