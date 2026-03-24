@@ -344,15 +344,15 @@ export const EmergencyNoticeDetailView: React.FC<EmergencyNoticeDetailViewProps>
           {previewNotice.description && (
             <div className="w-full bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700">
               <div className="text-slate-800 dark:text-slate-200 font-normal text-[15px] leading-loose text-left m-0 whitespace-pre-wrap tracking-wide">
-                {previewNotice.description.split(/(\[center\][\s\S]*?\[\/center\]|\[right\][\s\S]*?\[\/right\])/g).map((blockPart, i) => {
+                {previewNotice.description.split(/((?:\r?\n)?\[center\][\s\S]*?\[\/center\](?:\r?\n)?|(?:\r?\n)?\[right\][\s\S]*?\[\/right\](?:\r?\n)?)/g).map((blockPart, i) => {
                   let content = blockPart;
                   let alignClass = "";
                   
-                  if (blockPart.startsWith('[center]') && blockPart.endsWith('[/center]')) {
-                    content = blockPart.slice(8, -9);
+                  if (/\[center\]/.test(blockPart)) {
+                    content = blockPart.substring(blockPart.indexOf('[center]') + 8, blockPart.lastIndexOf('[/center]')).trim();
                     alignClass = "text-center block w-full";
-                  } else if (blockPart.startsWith('[right]') && blockPart.endsWith('[/right]')) {
-                    content = blockPart.slice(7, -8);
+                  } else if (/\[right\]/.test(blockPart)) {
+                    content = blockPart.substring(blockPart.indexOf('[right]') + 7, blockPart.lastIndexOf('[/right]')).trim();
                     alignClass = "text-right block w-full";
                   }
 
