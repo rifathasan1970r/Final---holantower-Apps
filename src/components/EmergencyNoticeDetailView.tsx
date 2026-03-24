@@ -14,6 +14,8 @@ import {
   Send,
   LogOut as LogOutIcon,
   Bold,
+  AlignCenter,
+  AlignRight,
   Pin,
   Edit
 } from 'lucide-react';
@@ -177,6 +179,34 @@ export const EmergencyNoticeDetailView: React.FC<EmergencyNoticeDetailViewProps>
     return url;
   };
 
+  const handleFormatClick = (prefix: string, suffix: string, isEditForm: boolean = false) => {
+    const textarea = isEditForm 
+      ? document.getElementById('edit-textarea') as HTMLTextAreaElement 
+      : textareaRef.current;
+      
+    if (!textarea) return;
+    
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const text = textarea.value;
+    const selected = text.substring(start, end);
+    const before = text.substring(0, start);
+    const after = text.substring(end);
+    
+    const newText = before + prefix + selected + suffix + after;
+    
+    if (isEditForm) {
+      setNoticeToEdit({...noticeToEdit, description: newText});
+    } else {
+      setDescription(newText);
+    }
+    
+    setTimeout(() => {
+      textarea.focus();
+      textarea.setSelectionRange(start + prefix.length, end + prefix.length);
+    }, 0);
+  };
+
   const handleAddNotice = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!title || !day || !month || !year || !driveLink) return;
@@ -314,11 +344,30 @@ export const EmergencyNoticeDetailView: React.FC<EmergencyNoticeDetailViewProps>
           {previewNotice.description && (
             <div className="w-full bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700">
               <div className="text-slate-800 dark:text-slate-200 font-normal text-[15px] leading-loose text-left m-0 whitespace-pre-wrap tracking-wide">
-                {previewNotice.description.split(/(\*\*[\s\S]*?\*\*)/g).map((part, i) => {
-                  if (part.startsWith('**') && part.endsWith('**')) {
-                    return <strong key={i} className="font-bold text-black dark:text-white">{part.slice(2, -2)}</strong>;
+                {previewNotice.description.split(/(\[center\][\s\S]*?\[\/center\]|\[right\][\s\S]*?\[\/right\])/g).map((blockPart, i) => {
+                  let content = blockPart;
+                  let alignClass = "";
+                  
+                  if (blockPart.startsWith('[center]') && blockPart.endsWith('[/center]')) {
+                    content = blockPart.slice(8, -9);
+                    alignClass = "text-center block w-full";
+                  } else if (blockPart.startsWith('[right]') && blockPart.endsWith('[/right]')) {
+                    content = blockPart.slice(7, -8);
+                    alignClass = "text-right block w-full";
                   }
-                  return <span key={i}>{part}</span>;
+
+                  const renderedContent = content.split(/(\*\*[\s\S]*?\*\*)/g).map((part, j) => {
+                    if (part.startsWith('**') && part.endsWith('**')) {
+                      return <strong key={j} className="font-bold text-black dark:text-white">{part.slice(2, -2)}</strong>;
+                    }
+                    return <span key={j}>{part}</span>;
+                  });
+
+                  if (alignClass) {
+                    return <span key={i} className={alignClass}>{renderedContent}</span>;
+                  }
+                  
+                  return <span key={i}>{renderedContent}</span>;
                 })}
               </div>
             </div>
@@ -493,21 +542,41 @@ export const EmergencyNoticeDetailView: React.FC<EmergencyNoticeDetailViewProps>
                   <div>
                     <div className="flex justify-between items-center mb-1">
                       <label className="text-xs font-bold text-slate-500 dark:text-slate-400 block">পিডিএফ এর নিচের লেখা (ঐচ্ছিক)</label>
-                      <button 
-                        type="button"
-                        onMouseDown={(e) => e.preventDefault()}
-                        onClick={handleBoldClick}
-                        className="p-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg text-slate-600 dark:text-slate-300 transition-colors"
-                        title="বোল্ড করুন"
-                      >
-                        <Bold size={14} />
-                      </button>
+                      <div className="flex gap-1">
+                        <button 
+                          type="button"
+                          onMouseDown={(e) => e.preventDefault()}
+                          onClick={() => handleFormatClick('**', '**')}
+                          className="p-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg text-slate-600 dark:text-slate-300 transition-colors"
+                          title="বোল্ড করুন"
+                        >
+                          <Bold size={14} />
+                        </button>
+                        <button 
+                          type="button"
+                          onMouseDown={(e) => e.preventDefault()}
+                          onClick={() => handleFormatClick('[center]', '[/center]')}
+                          className="p-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg text-slate-600 dark:text-slate-300 transition-colors"
+                          title="মাঝখানে নিন"
+                        >
+                          <AlignCenter size={14} />
+                        </button>
+                        <button 
+                          type="button"
+                          onMouseDown={(e) => e.preventDefault()}
+                          onClick={() => handleFormatClick('[right]', '[/right]')}
+                          className="p-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg text-slate-600 dark:text-slate-300 transition-colors"
+                          title="ডান পাশে নিন"
+                        >
+                          <AlignRight size={14} />
+                        </button>
+                      </div>
                     </div>
                     <textarea 
                       ref={textareaRef}
                       value={description}
                       onChange={(e) => setDescription(e.target.value)}
-                      placeholder="পিডিএফ এর নিচে দেখাবে... (বোল্ড করতে লেখা সিলেক্ট করে B বাটনে ক্লিক করুন)"
+                      placeholder="পিডিএফ এর নিচে দেখাবে... (বোল্ড বা এলাইন করতে লেখা সিলেক্ট করে বাটনে ক্লিক করুন)"
                       className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary-500 outline-none transition-all min-h-[100px] resize-none"
                     />
                   </div>
@@ -755,7 +824,7 @@ export const EmergencyNoticeDetailView: React.FC<EmergencyNoticeDetailViewProps>
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
-              className="bg-white dark:bg-slate-800 rounded-3xl p-6 w-full max-w-sm shadow-2xl border border-slate-100 dark:border-slate-700"
+              className="bg-white dark:bg-slate-800 rounded-3xl p-6 w-full max-w-sm shadow-2xl border border-slate-100 dark:border-slate-700 max-h-[90vh] overflow-y-auto"
             >
               <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-4">নোটিশ এডিট</h3>
               <div className="space-y-4">
@@ -804,36 +873,42 @@ export const EmergencyNoticeDetailView: React.FC<EmergencyNoticeDetailViewProps>
                 <div>
                   <div className="flex justify-between items-center mb-1">
                     <label className="text-xs font-bold text-slate-500 dark:text-slate-400 block">বিস্তারিত লেখা</label>
-                    <button 
-                      type="button"
-                      onMouseDown={(e) => {
-                        e.preventDefault();
-                        const textarea = document.getElementById('edit-textarea') as HTMLTextAreaElement;
-                        if (!textarea) return;
-                        const start = textarea.selectionStart;
-                        const end = textarea.selectionEnd;
-                        const text = textarea.value;
-                        const selected = text.substring(start, end);
-                        const before = text.substring(0, start);
-                        const after = text.substring(end);
-                        setNoticeToEdit({...noticeToEdit, description: before + `**${selected}**` + after});
-                        setTimeout(() => {
-                          textarea.focus();
-                          textarea.setSelectionRange(start + 2, end + 2);
-                        }, 0);
-                      }}
-                      className="p-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg text-slate-600 dark:text-slate-300 transition-colors"
-                      title="বোল্ড করুন"
-                    >
-                      <Bold size={14} />
-                    </button>
+                    <div className="flex gap-1">
+                      <button 
+                        type="button"
+                        onMouseDown={(e) => e.preventDefault()}
+                        onClick={() => handleFormatClick('**', '**', true)}
+                        className="p-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg text-slate-600 dark:text-slate-300 transition-colors"
+                        title="বোল্ড করুন"
+                      >
+                        <Bold size={14} />
+                      </button>
+                      <button 
+                        type="button"
+                        onMouseDown={(e) => e.preventDefault()}
+                        onClick={() => handleFormatClick('[center]', '[/center]', true)}
+                        className="p-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg text-slate-600 dark:text-slate-300 transition-colors"
+                        title="মাঝখানে নিন"
+                      >
+                        <AlignCenter size={14} />
+                      </button>
+                      <button 
+                        type="button"
+                        onMouseDown={(e) => e.preventDefault()}
+                        onClick={() => handleFormatClick('[right]', '[/right]', true)}
+                        className="p-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg text-slate-600 dark:text-slate-300 transition-colors"
+                        title="ডান পাশে নিন"
+                      >
+                        <AlignRight size={14} />
+                      </button>
+                    </div>
                   </div>
                   <textarea
                     id="edit-textarea"
                     value={noticeToEdit.description}
                     onChange={(e) => setNoticeToEdit({...noticeToEdit, description: e.target.value})}
                     className="w-full p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900"
-                    placeholder="বিস্তারিত লিখুন"
+                    placeholder="বিস্তারিত লিখুন (বোল্ড বা এলাইন করতে লেখা সিলেক্ট করে বাটনে ক্লিক করুন)"
                     rows={4}
                   />
                 </div>
