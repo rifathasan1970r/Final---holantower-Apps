@@ -28,6 +28,7 @@ interface Notice {
   createdAt: number;
   isPinned?: boolean;
   description?: string;
+  customUrl?: string;
 }
 
 interface EmergencyNoticeDetailViewProps {
@@ -65,6 +66,7 @@ export const EmergencyNoticeDetailView: React.FC<EmergencyNoticeDetailViewProps>
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [driveLink, setDriveLink] = useState('');
+  const [customUrl, setCustomUrl] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Date states
@@ -116,34 +118,11 @@ export const EmergencyNoticeDetailView: React.FC<EmergencyNoticeDetailViewProps>
     );
   }
 
-  const slugify = (text: string, id: string) => {
-    const bengaliToEnglishMap: { [key: string]: string } = {
-      'অ': 'o', 'আ': 'a', 'ই': 'i', 'ঈ': 'i', 'উ': 'u', 'ঊ': 'u', 'ঋ': 'ri', 'এ': 'e', 'ঐ': 'oi', 'ও': 'o', 'ঔ': 'ou',
-      'ক': 'k', 'খ': 'kh', 'গ': 'g', 'ঘ': 'gh', 'ঙ': 'ng',
-      'চ': 'ch', 'ছ': 'chh', 'জ': 'j', 'ঝ': 'jh', 'ঞ': 'n',
-      'ট': 't', 'ঠ': 'th', 'ড': 'd', 'ঢ': 'dh', 'ণ': 'n',
-      'ত': 't', 'থ': 'th', 'দ': 'd', 'ধ': 'dh', 'ন': 'n',
-      'প': 'p', 'ফ': 'f', 'ব': 'b', 'ভ': 'v', 'ম': 'm',
-      'য': 'j', 'র': 'r', 'ল': 'l', 'শ': 'sh', 'ষ': 'sh', 'স': 's', 'হ': 'h', 'ড়': 'r', 'ঢ়': 'rh', 'য়': 'y',
-      'ৎ': 't', 'ং': 'ng', 'ঃ': 'h', 'ঁ': 'n',
-      'া': 'a', 'ি': 'i', 'ী': 'i', 'ু': 'u', 'ূ': 'u', 'ৃ': 'ri', 'ে': 'e', 'ৈ': 'oi', 'ো': 'o', 'ৌ': 'ou', '্': '',
-      '০': '0', '১': '1', '২': '2', '৩': '3', '৪': '4', '৫': '5', '৬': '6', '৭': '7', '৮': '8', '৯': '9'
-    };
-    
-    let transliterated = '';
-    for (let i = 0; i < text.length; i++) {
-      const char = text[i];
-      transliterated += bengaliToEnglishMap[char] || char;
-    }
-    
-    const slug = transliterated.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
-    return slug || id;
-  };
-
-  const previewNotice = noticeId ? notices.find(n => slugify(n.title, n.id) === noticeId || n.id === noticeId) : null;
+  const previewNotice = noticeId ? notices.find(n => n.customUrl === noticeId || n.id === noticeId) : null;
 
   const navigateToNotice = (notice: Notice) => {
-    navigate(`/emergency-notice/${slugify(notice.title, notice.id)}.html`);
+    const urlSlug = notice.customUrl || notice.id;
+    navigate(`/emergency-notice/${urlSlug}.html`);
   };
 
   const handleTogglePin = async (id: string) => {
@@ -206,6 +185,9 @@ export const EmergencyNoticeDetailView: React.FC<EmergencyNoticeDetailViewProps>
     try {
       const formattedDate = `${toBengaliNumber(day)} ${month} ${toBengaliNumber(year)}`;
       
+      const defaultUrl = `holantower-official-Notice-${notices.length + 1}`;
+      const finalUrl = customUrl.trim() ? customUrl.trim().replace(/\s+/g, '-').toLowerCase() : defaultUrl;
+      
       const newNotice: Notice = {
         id: Date.now().toString(),
         title,
@@ -213,7 +195,8 @@ export const EmergencyNoticeDetailView: React.FC<EmergencyNoticeDetailViewProps>
         driveLink,
         createdAt: Date.now(),
         isPinned: false,
-        description: description.trim() || undefined
+        description: description.trim() || undefined,
+        customUrl: finalUrl
       };
       
       const newNotices = [newNotice, ...notices];
@@ -231,6 +214,7 @@ export const EmergencyNoticeDetailView: React.FC<EmergencyNoticeDetailViewProps>
       setMonth(BENGALI_MONTHS[today.getMonth()]);
       setYear(today.getFullYear().toString());
       setDriveLink('');
+      setCustomUrl('');
       setShowAddForm(false);
     } catch (error) {
       console.error("Error adding notice:", error);
@@ -259,7 +243,12 @@ export const EmergencyNoticeDetailView: React.FC<EmergencyNoticeDetailViewProps>
   const confirmEdit = async () => {
     if (!noticeToEdit) return;
     try {
-      const newNotices = notices.map(n => n.id === noticeToEdit.id ? noticeToEdit : n);
+      const defaultUrl = `holantower-official-Notice-${notices.findIndex(n => n.id === noticeToEdit.id) + 1}`;
+      const finalUrl = noticeToEdit.customUrl?.trim() ? noticeToEdit.customUrl.trim().replace(/\s+/g, '-').toLowerCase() : defaultUrl;
+      
+      const updatedNotice = { ...noticeToEdit, customUrl: finalUrl };
+      const newNotices = notices.map(n => n.id === noticeToEdit.id ? updatedNotice : n);
+      
       const { error } = await supabase
         .from('app_settings')
         .upsert({ key: 'emergency_notices', value: JSON.stringify(newNotices) }, { onConflict: 'key' });
@@ -490,6 +479,16 @@ export const EmergencyNoticeDetailView: React.FC<EmergencyNoticeDetailViewProps>
                         <option value={(today.getFullYear() + 1).toString()}>{toBengaliNumber(today.getFullYear() + 1)}</option>
                       </select>
                     </div>
+                  </div>
+                  <div>
+                    <label className="text-xs font-bold text-slate-500 dark:text-slate-400 mb-1 block">কাস্টম URL (ঐচ্ছিক)</label>
+                    <input 
+                      type="text" 
+                      value={customUrl}
+                      onChange={(e) => setCustomUrl(e.target.value)}
+                      placeholder="উদা: holantower-official-Notice-1"
+                      className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary-500 outline-none transition-all"
+                    />
                   </div>
                   <div>
                     <div className="flex justify-between items-center mb-1">
@@ -790,6 +789,16 @@ export const EmergencyNoticeDetailView: React.FC<EmergencyNoticeDetailViewProps>
                     onChange={(e) => setNoticeToEdit({...noticeToEdit, driveLink: e.target.value})}
                     className="w-full p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900"
                     placeholder="পিডিএফ লিংক"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-bold text-slate-500 dark:text-slate-400 mb-1 block">কাস্টম URL (ঐচ্ছিক)</label>
+                  <input
+                    type="text"
+                    value={noticeToEdit.customUrl || ''}
+                    onChange={(e) => setNoticeToEdit({...noticeToEdit, customUrl: e.target.value.replace(/\s+/g, '-').toLowerCase()})}
+                    className="w-full p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900"
+                    placeholder="কাস্টম URL"
                   />
                 </div>
                 <div>
