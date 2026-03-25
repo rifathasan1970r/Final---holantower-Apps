@@ -529,7 +529,6 @@ export const ToLetView = ({ setView }: { setView?: (view: string, params?: any) 
 
           <a 
             href={`https://wa.me/${contactPhone.replace(/\D/g, '')}?text=হ্যালো%20আমি%20ফ্ল্যাট%20সম্পর্কে%20জানতে%20চাই`}
-            target="_blank"
             className="block w-full p-[18px] rounded-xl mt-3 text-[17px] font-black text-white text-center bg-[#25d366] active:scale-95 transition-transform"
           >
             <i className="fa-brands fa-whatsapp mr-2"></i> WhatsApp বার্তা ও কল

@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { AIAssistant } from './AIAssistant';
 import { ChevronLeft, ChevronRight, ArrowLeft, Search, CheckCircle2, XCircle, Clock, Users, Home, PieChart, CalendarDays, TrendingUp, Wallet, ArrowUpRight, ListFilter, RefreshCw, Lock, Unlock, Edit3, Save, X, Grid, Calendar as CalendarIcon, DollarSign, Check, Info, MessageCircle, Send, Phone, Car, Bot, FileDown, ChevronDown, MessageSquare, Bell, AlertCircle } from 'lucide-react';
@@ -84,6 +85,8 @@ export const ServiceChargeView: React.FC<ServiceChargeViewProps> = ({
   showSummaryList,
   onSummaryToggle
 }) => {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [showMonthlySummary, setShowMonthlySummary] = useState<boolean>(false);
   const [showDueSummary, setShowDueSummary] = useState<boolean>(false);
   const [dueSummaryData, setDueSummaryData] = useState<{unit: string, due2025: number, due2026: number}[]>([]);
@@ -96,6 +99,67 @@ export const ServiceChargeView: React.FC<ServiceChargeViewProps> = ({
   const [showFullYearTable, setShowFullYearTable] = useState<boolean>(false);
   const [fullYearTableUnitFilter, setFullYearTableUnitFilter] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
+
+  // Handle URL Parameters
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const section = params.get('section');
+    const year = params.get('year');
+    const mode = params.get('mode');
+
+    if (section) {
+      if (section === 'monthly-summary') {
+        setShowMonthlySummary(true);
+        setShowDueSummary(false);
+        setShowFullYearTable(false);
+        setShowParkingView(false);
+        setViewMode('SERVICE');
+      } else if (section === 'due-summary') {
+        setShowDueSummary(true);
+        setShowMonthlySummary(false);
+        setShowFullYearTable(false);
+        setShowParkingView(false);
+        setViewMode('SERVICE');
+      } else if (section === 'full-year-table') {
+        setShowFullYearTable(true);
+        setShowMonthlySummary(false);
+        setShowDueSummary(false);
+        setShowParkingView(false);
+        setViewMode('SERVICE');
+      } else if (section === 'parking-charge') {
+        setShowParkingView(true);
+        setShowMonthlySummary(false);
+        setShowDueSummary(false);
+        setShowFullYearTable(false);
+        setViewMode('PARKING');
+      } else if (section === 'parking-monthly-summary') {
+        setShowMonthlySummary(true);
+        setShowDueSummary(false);
+        setShowFullYearTable(false);
+        setShowParkingView(false);
+        setViewMode('PARKING');
+      } else if (section === 'parking-due-summary') {
+        setShowDueSummary(true);
+        setShowMonthlySummary(false);
+        setShowFullYearTable(false);
+        setShowParkingView(false);
+        setViewMode('PARKING');
+      } else if (section === 'parking-full-year-table') {
+        setShowFullYearTable(true);
+        setShowMonthlySummary(false);
+        setShowDueSummary(false);
+        setShowParkingView(false);
+        setViewMode('PARKING');
+      }
+    }
+
+    if (year) {
+      const yearNum = parseInt(year);
+      if (yearNum === 2025 || yearNum === 2026) {
+        setSelectedYear(yearNum);
+      }
+    }
+  }, [location.search]);
   
   // Supabase State
   const [dbData, setDbData] = useState<PaymentData[]>([]);
@@ -1409,7 +1473,7 @@ export const ServiceChargeView: React.FC<ServiceChargeViewProps> = ({
     // Create a temporary link and click it to attempt forcing external browser
     const link = document.createElement('a');
     link.href = url;
-    link.target = '_blank';
+    link.target = '_self';
     link.rel = 'noopener noreferrer';
     document.body.appendChild(link);
     link.click();
@@ -1670,10 +1734,10 @@ export const ServiceChargeView: React.FC<ServiceChargeViewProps> = ({
 
           {/* Option 2 */}
           <a 
-            href="https://holantowar.vercel.app/service-charge.html?section=parking-charge&mode=parking"
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => {
+            href={`/service-charge.html?section=parking-charge&mode=parking`}
+            onClick={(e) => {
+                e.preventDefault();
+                navigate(`/service-charge.html?section=parking-charge&mode=parking`);
                 setViewMode('PARKING');
                 setShowParkingView(false);
             }}
@@ -3493,7 +3557,7 @@ export const ServiceChargeView: React.FC<ServiceChargeViewProps> = ({
                                                 // iOS / Desktop - Use anchor click which is often more reliable than window.open in WebViews
                                                 const link = document.createElement('a');
                                                 link.href = webUrl;
-                                                link.target = '_blank';
+                                                link.target = '_self';
                                                 link.rel = 'noopener noreferrer';
                                                 document.body.appendChild(link);
                                                 link.click();
@@ -3817,10 +3881,10 @@ export const ServiceChargeView: React.FC<ServiceChargeViewProps> = ({
 
             <div className="mb-6">
                 <a 
-                    href={`https://holantowar.vercel.app/service-charge.html?section=${viewMode === 'PARKING' ? 'parking-full-year-table' : 'full-year-table'}&year=${selectedYear}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() => {
+                    href={`/service-charge.html?section=${viewMode === 'PARKING' ? 'parking-full-year-table' : 'full-year-table'}&year=${selectedYear}`}
+                    onClick={(e) => {
+                        e.preventDefault();
+                        navigate(`/service-charge.html?section=${viewMode === 'PARKING' ? 'parking-full-year-table' : 'full-year-table'}&year=${selectedYear}`);
                         setFullYearTableUnitFilter(null);
                         setShowFullYearTable(true);
                     }}
@@ -3843,10 +3907,10 @@ export const ServiceChargeView: React.FC<ServiceChargeViewProps> = ({
 
             <div className="mb-6">
                 <a 
-                    href={`https://holantowar.vercel.app/service-charge.html?section=${viewMode === 'PARKING' ? 'parking-due-summary' : 'due-summary'}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() => {
+                    href={`/service-charge.html?section=${viewMode === 'PARKING' ? 'parking-due-summary' : 'due-summary'}`}
+                    onClick={(e) => {
+                        e.preventDefault();
+                        navigate(`/service-charge.html?section=${viewMode === 'PARKING' ? 'parking-due-summary' : 'due-summary'}`);
                         setShowDueSummary(true);
                         fetchDueSummaryData();
                     }}
@@ -4090,10 +4154,12 @@ export const ServiceChargeView: React.FC<ServiceChargeViewProps> = ({
             {/* Parking Charge Button */}
             {viewMode === 'SERVICE' ? (
                 <a 
-                    href="https://holantowar.vercel.app/service-charge.html?section=parking-charge&mode=select"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() => setShowParkingView(true)}
+                    href={`/service-charge.html?section=parking-charge&mode=select`}
+                    onClick={(e) => {
+                        e.preventDefault();
+                        navigate(`/service-charge.html?section=parking-charge&mode=select`);
+                        setShowParkingView(true);
+                    }}
                     className="mb-4 w-full relative overflow-hidden rounded-2xl shadow-md border border-slate-200 dark:border-slate-700 p-4 bg-white dark:bg-slate-800 flex items-center justify-between group active:scale-[0.98] transition-all"
                 >
                     <div className="flex items-center gap-3">
@@ -4128,10 +4194,12 @@ export const ServiceChargeView: React.FC<ServiceChargeViewProps> = ({
 
             {/* Monthly Summary Button - New Separate Box */}
             <a 
-                href={`https://holantowar.vercel.app/service-charge.html?section=${viewMode === 'PARKING' ? 'parking-monthly-summary' : 'monthly-summary'}&year=${selectedYear}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => setShowMonthlySummary(true)}
+                href={`/service-charge.html?section=${viewMode === 'PARKING' ? 'parking-monthly-summary' : 'monthly-summary'}&year=${selectedYear}`}
+                onClick={(e) => {
+                    e.preventDefault();
+                    navigate(`/service-charge.html?section=${viewMode === 'PARKING' ? 'parking-monthly-summary' : 'monthly-summary'}&year=${selectedYear}`);
+                    setShowMonthlySummary(true);
+                }}
                 className="mb-6 w-full relative overflow-hidden rounded-2xl shadow-md border border-slate-200 dark:border-slate-700 p-4 bg-white dark:bg-slate-800 flex items-center justify-between group active:scale-[0.98] transition-all"
             >
                 <div className="flex items-center gap-3">

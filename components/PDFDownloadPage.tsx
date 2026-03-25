@@ -271,8 +271,6 @@ export const PDFDownloadPage: React.FC = () => {
 
           <a 
             href={typeof window !== 'undefined' ? window.location.href : '#'}
-            target="_blank"
-            rel="noopener noreferrer"
             onClick={() => {
               if (typeof window !== 'undefined') {
                 navigator.clipboard.writeText(window.location.href);

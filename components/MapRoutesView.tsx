@@ -58,8 +58,6 @@ const PremiumMapCard: React.FC = () => {
           </div>
           <a 
             href="https://maps.app.goo.gl/mwFP2BxYm1cK2m2P9"
-            target="_blank"
-            rel="noopener noreferrer"
             className="flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white px-6 py-3 rounded-2xl font-bold text-sm shadow-lg shadow-emerald-500/20 transition-all active:scale-95 w-full"
           >
             <Navigation size={16} />

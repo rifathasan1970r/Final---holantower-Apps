@@ -314,7 +314,7 @@ export const EmergencyNoticeDetailView: React.FC<EmergencyNoticeDetailViewProps>
             </div>
           </div>
           <button 
-            onClick={() => window.open(previewNotice.driveLink, '_blank')}
+            onClick={() => window.open(previewNotice.driveLink, '_self')}
             className="p-2.5 rounded-xl bg-primary-50 text-primary-600 dark:bg-primary-900/20 dark:text-primary-400 hover:bg-primary-100 transition-all shrink-0"
             title="ব্রাউজারে ওপেন করুন"
           >

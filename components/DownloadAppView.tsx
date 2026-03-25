@@ -48,7 +48,7 @@ export const DownloadAppView: React.FC<DownloadAppViewProps> = ({ onBack }) => {
 
   const handleDownloadAPK = () => {
     // Direct link to the APK or download page provided by user
-    window.open('https://holan-tower-apps-download.vercel.app/#download', '_blank');
+    window.open('https://holan-tower-apps-download.vercel.app/#download', '_self');
   };
 
   return (

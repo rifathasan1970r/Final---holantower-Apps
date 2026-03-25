@@ -58,8 +58,6 @@ export const MaintenanceView: React.FC<MaintenanceViewProps> = ({ onBack, setVie
             <div className="grid grid-cols-1 gap-3">
               <a 
                 href="https://ahmrifathasan.bio.link/" 
-                target="_blank" 
-                rel="noopener noreferrer"
                 className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 text-slate-700 dark:text-slate-200 font-bold text-sm border border-slate-100 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all active:scale-95"
               >
                 <Globe size={18} className="text-[#6a11cb]" /> 
@@ -69,8 +67,6 @@ export const MaintenanceView: React.FC<MaintenanceViewProps> = ({ onBack, setVie
               <div className="grid grid-cols-2 gap-3">
                 <a 
                   href="https://www.facebook.com/rifathasan.1234" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
                   className="flex items-center justify-center gap-2 py-3 rounded-xl bg-[#1877F2]/10 text-[#1877F2] font-bold text-sm border border-[#1877F2]/20 hover:bg-[#1877F2]/20 transition-all active:scale-95"
                 >
                   <Facebook size={18} /> 
@@ -79,8 +75,6 @@ export const MaintenanceView: React.FC<MaintenanceViewProps> = ({ onBack, setVie
 
                 <a 
                   href="https://wa.me/+8801626678138" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
                   className="flex items-center justify-center gap-2 py-3 rounded-xl bg-[#25D366]/10 text-[#25D366] font-bold text-sm border border-[#25D366]/20 hover:bg-[#25D366]/20 transition-all active:scale-95"
                 >
                   <MessageCircle size={18} /> 

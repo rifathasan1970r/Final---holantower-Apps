@@ -635,8 +635,6 @@ export const DescoView: React.FC<DescoViewProps> = ({ lang = 'bn', setView }) =>
 
                   <a 
                     href={BLOG_LINK}
-                    target="_blank"
-                    rel="noreferrer"
                     className="w-full py-2 px-2.5 rounded-lg bg-white text-[#222] font-bold text-[13px] border border-black/5 shadow-sm text-center no-underline hover:bg-gray-50 active:scale-95 transition-all"
                   >
                     মোবাইল ব্যাংকিং/অ্যাপস এর মাধ্যমে
