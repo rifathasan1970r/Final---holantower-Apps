@@ -337,7 +337,7 @@ export const AccountsView: React.FC<AccountsViewProps> = ({ onBack, setView }) =
           </div>
           
           {/* Year Selection Tabs - Matching ServiceChargeView style */}
-          <div className="bg-white border border-slate-100 p-1 rounded-xl shadow-sm flex">
+          <div className="bg-white border border-slate-100 p-1 rounded-xl shadow-sm flex animate-border-red">
             {[2025, 2026, 2027].map(year => (
               <button 
                 key={year}

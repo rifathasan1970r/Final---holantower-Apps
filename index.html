@@ -92,6 +92,25 @@
       .animate-glow {
         animation: glow 3s ease-in-out infinite;
       }
+      @property --angle {
+        syntax: '<angle>';
+        initial-value: 0deg;
+        inherits: false;
+      }
+      @keyframes rotate-angle {
+        to { --angle: 360deg; }
+      }
+      .animate-border-red {
+        border: 1px solid transparent !important;
+        background: linear-gradient(white, white) padding-box,
+                    conic-gradient(from var(--angle), transparent 70%, rgba(239, 68, 68, 0.3) 85%, #ef4444 100%) border-box !important;
+        animation: rotate-angle 3s linear infinite;
+        transition: background 0.3s ease;
+      }
+      .dark .animate-border-red {
+        background: linear-gradient(#1e293b, #1e293b) padding-box,
+                    conic-gradient(from var(--angle), transparent 70%, rgba(239, 68, 68, 0.3) 85%, #ef4444 100%) border-box !important;
+      }
     </style>
   <script type="importmap">
 {

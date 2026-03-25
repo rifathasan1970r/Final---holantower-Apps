@@ -996,7 +996,7 @@ export const ServiceChargeView: React.FC<ServiceChargeViewProps> = ({
         </div>
 
         {/* Year Selection Tabs for 12 Months Info */}
-        <div className="bg-white dark:bg-slate-800 p-1 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 flex mb-6">
+        <div className="bg-white dark:bg-slate-800 p-1 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 flex mb-6 animate-border-red">
             <button 
                 onClick={() => setSelectedYear(2025)}
                 className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-bold transition-all ${selectedYear === 2025 ? 'bg-primary-50 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700'}`}
@@ -1669,7 +1669,10 @@ export const ServiceChargeView: React.FC<ServiceChargeViewProps> = ({
           </button>
 
           {/* Option 2 */}
-          <button 
+          <a 
+            href="https://holantowar.vercel.app/service-charge.html?section=parking-charge&mode=parking"
+            target="_blank"
+            rel="noopener noreferrer"
             onClick={() => {
                 setViewMode('PARKING');
                 setShowParkingView(false);
@@ -1686,7 +1689,7 @@ export const ServiceChargeView: React.FC<ServiceChargeViewProps> = ({
               </div>
             </div>
             <ChevronRight size={20} className="text-slate-400 group-hover:text-orange-500 transition-colors" />
-          </button>
+          </a>
         </div>
       </div>
     );
@@ -1923,7 +1926,7 @@ export const ServiceChargeView: React.FC<ServiceChargeViewProps> = ({
 
         {/* Year Selection Tabs */}
         <div className="px-4 pt-4 pb-0">
-             <div className="bg-white dark:bg-slate-800 p-1 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 flex">
+             <div className="bg-white dark:bg-slate-800 p-1 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 flex animate-border-red">
                 <button 
                     onClick={() => setSelectedYear(2025)}
                     className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-bold transition-all ${selectedYear === 2025 ? 'bg-primary-50 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700'}`}
@@ -3555,7 +3558,7 @@ export const ServiceChargeView: React.FC<ServiceChargeViewProps> = ({
              </div>
 
              {/* Year Selection Tabs - Added for All Units Summary */}
-             <div className="bg-white dark:bg-slate-800 p-1 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 flex mb-4">
+             <div className="bg-white dark:bg-slate-800 p-1 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 flex mb-4 animate-border-red">
                 <button 
                     onClick={() => setSelectedYear(2025)}
                     className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-bold transition-all ${selectedYear === 2025 ? 'bg-primary-50 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700'}`}
@@ -3797,7 +3800,7 @@ export const ServiceChargeView: React.FC<ServiceChargeViewProps> = ({
              </div>
 
              {/* Year Selection Tabs */}
-             <div className="bg-white dark:bg-slate-800 p-1 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 flex mb-6">
+             <div className="bg-white dark:bg-slate-800 p-1 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 flex mb-6 animate-border-red">
                 <button 
                     onClick={() => setSelectedYear(2025)}
                     className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-bold transition-all ${selectedYear === 2025 ? 'bg-primary-50 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700'}`}
@@ -3813,7 +3816,10 @@ export const ServiceChargeView: React.FC<ServiceChargeViewProps> = ({
             </div>
 
             <div className="mb-6">
-                <button 
+                <a 
+                    href={`https://holantowar.vercel.app/service-charge.html?section=${viewMode === 'PARKING' ? 'parking-full-year-table' : 'full-year-table'}&year=${selectedYear}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     onClick={() => {
                         setFullYearTableUnitFilter(null);
                         setShowFullYearTable(true);
@@ -3832,11 +3838,14 @@ export const ServiceChargeView: React.FC<ServiceChargeViewProps> = ({
                     <div className="bg-white/20 p-2 rounded-full text-white group-hover:bg-white/30 transition-colors">
                         <ChevronRight size={20} />
                     </div>
-                </button>
+                </a>
             </div>
 
             <div className="mb-6">
-                <button 
+                <a 
+                    href={`https://holantowar.vercel.app/service-charge.html?section=${viewMode === 'PARKING' ? 'parking-due-summary' : 'due-summary'}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     onClick={() => {
                         setShowDueSummary(true);
                         fetchDueSummaryData();
@@ -3855,7 +3864,7 @@ export const ServiceChargeView: React.FC<ServiceChargeViewProps> = ({
                     <div className="bg-white/20 p-2 rounded-full text-white group-hover:bg-white/30 transition-colors">
                         <ChevronRight size={20} />
                     </div>
-                </button>
+                </a>
             </div>
 
             {/* 12 Month Summary Strip - Premium Thin Box */}
@@ -4024,7 +4033,7 @@ export const ServiceChargeView: React.FC<ServiceChargeViewProps> = ({
         // VIEW 3: MAIN GRID DASHBOARD
         <div>
             {/* Year Selection Tabs */}
-            <div className="bg-white dark:bg-slate-800 p-1 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 flex mb-6">
+            <div className="bg-white dark:bg-slate-800 p-1 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 flex mb-6 animate-border-red">
                 <button 
                     onClick={() => setSelectedYear(2025)}
                     className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-bold transition-all ${selectedYear === 2025 ? 'bg-primary-50 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700'}`}
@@ -4080,7 +4089,10 @@ export const ServiceChargeView: React.FC<ServiceChargeViewProps> = ({
 
             {/* Parking Charge Button */}
             {viewMode === 'SERVICE' ? (
-                <button 
+                <a 
+                    href="https://holantowar.vercel.app/service-charge.html?section=parking-charge&mode=select"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     onClick={() => setShowParkingView(true)}
                     className="mb-4 w-full relative overflow-hidden rounded-2xl shadow-md border border-slate-200 dark:border-slate-700 p-4 bg-white dark:bg-slate-800 flex items-center justify-between group active:scale-[0.98] transition-all"
                 >
@@ -4096,7 +4108,7 @@ export const ServiceChargeView: React.FC<ServiceChargeViewProps> = ({
                     <div className="bg-slate-50 dark:bg-slate-700 p-2 rounded-full text-slate-400 dark:text-slate-500 group-hover:bg-orange-50 dark:group-hover:bg-orange-900/30 group-hover:text-orange-500 transition-colors">
                         <ChevronRight size={20} />
                     </div>
-                </button>
+                </a>
             ) : (
                 <button 
                     onClick={() => setViewMode('SERVICE')}
@@ -4115,7 +4127,10 @@ export const ServiceChargeView: React.FC<ServiceChargeViewProps> = ({
             )}
 
             {/* Monthly Summary Button - New Separate Box */}
-            <button 
+            <a 
+                href={`https://holantowar.vercel.app/service-charge.html?section=${viewMode === 'PARKING' ? 'parking-monthly-summary' : 'monthly-summary'}&year=${selectedYear}`}
+                target="_blank"
+                rel="noopener noreferrer"
                 onClick={() => setShowMonthlySummary(true)}
                 className="mb-6 w-full relative overflow-hidden rounded-2xl shadow-md border border-slate-200 dark:border-slate-700 p-4 bg-white dark:bg-slate-800 flex items-center justify-between group active:scale-[0.98] transition-all"
             >
@@ -4131,7 +4146,7 @@ export const ServiceChargeView: React.FC<ServiceChargeViewProps> = ({
                 <div className="bg-slate-50 dark:bg-slate-700 p-2 rounded-full text-slate-400 dark:text-slate-500 group-hover:bg-indigo-50 dark:group-hover:bg-indigo-900/30 group-hover:text-indigo-500 transition-colors">
                     <ChevronRight size={20} />
                 </div>
-            </button>
+            </a>
 
             {/* Search Bar */}
             <div className="relative mb-6">
